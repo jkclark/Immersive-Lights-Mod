@@ -2,7 +2,7 @@
 
 This mod works with an [IFTTT](https://ifttt.com/) service to change your lights to a specific color based on your current biome in Minecraft. Currently works with Minecraft/Forge 1.14.
 
-Of course, you need to have IFTTT-compatible light bulbs to make anything happen. I have Smart Life light bulbs, which integrate with IFTTT. When I saw that IFTTT had a Smart Life integration, I knew I had to try to make this mod. 
+Of course, you need to have IFTTT-compatible light bulbs to make anything happen. I use Smart Life light bulbs, which integrate with IFTTT.
 
 The IFTTT applet I made uses filter code, so I can't publish it for free. If there is enough demand, I'll happily pay to publish it.
 
