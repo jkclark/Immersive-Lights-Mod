@@ -1,6 +1,5 @@
-Smartlife.lightColor.setLightBrightness("100");
-
 var biome = MakerWebhooks.event.Value1;
+var hour = parseInt(MakerWebhooks.event.Value2);
 
 switch (biome) {
   case "PLAINS":
@@ -54,4 +53,20 @@ switch (biome) {
   default:
     Smartlife.lightColor.setLightColor("#ff00e6");
     break;
+}
+
+/*** Set the brightness based on time of day ***/
+// Daytime
+if (hour <= 12) {
+    Smartlife.lightColor.setLightBrightness("100");
+}
+
+// Nighttime
+else if (hour >= 14 && hour <= 22) {
+    Smartlife.lightColor.setLightBrightness("10");
+}
+
+// Dawn/Dusk
+else if (hour == 23 || hour == 13) {
+    Smartlife.lightColor.setLightBrightness("25");
 }

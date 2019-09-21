@@ -8,6 +8,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.http.entity.StringEntity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,7 @@ import java.util.concurrent.Future;
 
 class LightModEventHandler {
     private static Biome.Category prevBiomeCategory;
+    private static int prevHour;
     private static Date lastRequest;
     private static final int minTimeBtwnRequests = 10000;  // In milliseconds
 
@@ -29,34 +31,65 @@ class LightModEventHandler {
         World world = event.player.world;
         Biome biome = world.getBiome(event.player.getPosition());
         Biome.Category currBiomeCategory = biome.getCategory();
+        int gameHour = (int) world.getDayTime() / 1000;
 
+        // This only applies to the first tick of the session
         if (prevBiomeCategory == null) {
-            // First tick of the game, change the lights for the current biome
-            changeLights(currBiomeCategory);
+            // Set the lights for the first time
+            changeLights(currBiomeCategory, gameHour);
+
+            // Mark the time of this request
             Calendar cal = Calendar.getInstance();
             lastRequest = cal.getTime();
 
-            // Update biome
+            // Update the biome
             prevBiomeCategory = currBiomeCategory;
+
+            // Update the in-game hour
+            prevHour = gameHour;
         }
+
+        // Every tick of the session after the first one
         else {
-            // Don't send a request if we've sent one in the last 30 seconds
+            // Only send a request if it's been at least minTimeBtwnRequests milliseconds since the last one
             Calendar cal = Calendar.getInstance();
             Date rightNow = cal.getTime();
             long diff = rightNow.getTime() - lastRequest.getTime();
-            if (diff > minTimeBtwnRequests) {
+            boolean minTimePassed = diff > minTimeBtwnRequests;
 
-                // Don't send a request if the current biome's category isn't different than the previous one
-                if (prevBiomeCategory != currBiomeCategory) {
-                    changeLights(currBiomeCategory);
+            if (minTimePassed) {
+                // Now that we've waited long enough, only send a request if:
+                //  - The biome category has changed since the last time we sent a request
+                //  OR
+                //  - The in-game hour has changed
+
+                // Has the biome category changed?
+                boolean biomeHasChanged = prevBiomeCategory != currBiomeCategory;
+
+                // Has the in-game hour changed?
+                boolean inGameHourChanged = prevHour != gameHour;
+
+                if (biomeHasChanged || inGameHourChanged) {
+                    System.out.println("SOMETHING CHANGED");
+                    System.out.println(prevHour);
+                    System.out.println(gameHour);
+
+                    // Set the lights
+                    changeLights(currBiomeCategory, gameHour);
+
+                    // Mark the time of this request
                     lastRequest = cal.getTime();
 
+                    // Update the biome
                     // By only updating the biome if it has been minTimeBtwnRequests milliseconds (and if it's different
                     // than the last one) we guarantee the light changing to the appropriate color for the current biome.
                     // (If we did it every tick, it wouldn't necessarily be considered different after the 30 second
                     // pause)
                     prevBiomeCategory = currBiomeCategory;
                 }
+
+                // Update the in-game hour
+                prevHour = gameHour;
             }
         }
     }
@@ -86,9 +119,10 @@ class LightModEventHandler {
         }
     }
 
-    private void changeLights(Biome.Category newBiomeCategory) {
-        final String iftttKEY = "YOUR IFTTT KEY GOES HERE";
-        String url = "https://maker.ifttt.com/trigger/minecraft_biome_changed/with/key/" + iftttKEY + "?value1=" + newBiomeCategory.toString();
+    private void changeLights(Biome.Category newBiomeCategory, int hour) {
+        final String iftttKEY = "X7UnEBgrLCjL4CgEB7n20";
+        String url = "https://maker.ifttt.com/trigger/minecraft_biome_changed/with/key/" + iftttKEY +
+                      "?value1=" + newBiomeCategory.toString() + "&value2=" + Integer.toString(hour);
         ExecutorService executor = Executors.newFixedThreadPool(1);
         try {
             Future<Response> response = executor.submit(new Request(new URL(url)));
