@@ -70,10 +70,6 @@ class LightModEventHandler {
                 boolean inGameHourChanged = prevHour != gameHour;
 
                 if (biomeHasChanged || inGameHourChanged) {
-                    System.out.println("SOMETHING CHANGED");
-                    System.out.println(prevHour);
-                    System.out.println(gameHour);
-
                     // Set the lights
                     changeLights(currBiomeCategory, gameHour);
 
