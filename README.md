@@ -25,3 +25,9 @@ And you're done! I hope someone out there gets something out of this. It was rea
 Please feel free to contact me, create issues and pull requests, etc.
 
 Happy immersing!
+
+### Changelog:
+- 09/21/2019:
+    - Lights now change brightness based on in-game time of day.
+- 09/10/2019:
+    - First commit. Lights change color based on biome categories.
