@@ -18,7 +18,7 @@ You can create your own IFTTT applet through [IFTTT Platform](https://platform.i
     - You can set the light color for any biome category by changing the "#XXXXXX" in the corresponding `case`.
     - As of right now, you can't specify colors down to the exact biome -- maybe I'll add that capability in a future version.
 5. Connect your IFTTT account to the applet you just made, and fill in any required fields.
-5. In `ImmersiveLightsMod.java`, set the value of `iftttKey` to your IFTTT API key. You can find this key by going to the [IFTTT Webhooks](https://ifttt.com/maker_webhooks) page and clicking "Documentation" in the top-right.
+5. In `ImmersiveLightsMod.java`, set the value of `iftttKey` to your IFTTT API key. You can find this key by going to the [IFTTT Webhooks](https://ifttt.com/maker_webhooks) page and clicking "Documentation" in the top right.
 
 And you're done! I hope someone out there gets something out of this. It was really fun to make (although frustrating at times).
 
