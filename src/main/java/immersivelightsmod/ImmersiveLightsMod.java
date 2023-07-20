@@ -116,7 +116,8 @@ class LightModEventHandler {
     }
 
     private void changeLights(Biome.Category newBiomeCategory, int hour) {
-        final String iftttKEY = "X7UnEBgrLCjL4CgEB7n20";
+        // TODO: Somehow get this from a secret somewhere...
+        final String iftttKEY = "...";
         String url = "https://maker.ifttt.com/trigger/minecraft_biome_changed/with/key/" + iftttKEY +
                       "?value1=" + newBiomeCategory.toString() + "&value2=" + Integer.toString(hour);
         ExecutorService executor = Executors.newFixedThreadPool(1);
